@@ -1,5 +1,4 @@
-use crate::parser::{SupportedFunction, UnsupportedFunction};
-use crate::parser::rust_type_to_ts;
+use crate::parser::{SupportedFunction, UnsupportedFunction, rust_type_to_ts, rust_type_to_arg_type, rust_type_to_ret_type};
 use std::fs;
 
 pub fn generate(output_dir: &str, name: &str, supported: &[SupportedFunction], unsupported: &[UnsupportedFunction]) {
@@ -37,10 +36,18 @@ version = "0.1.0"
     );
     
     for func in supported {
+        let args: Vec<String> = func.params.iter()
+            .map(|p| rust_type_to_arg_type(p))
+            .collect();
+        let ret = rust_type_to_ret_type(&func.return_type);
+        
         content.push_str(&format!(
-            r#""{}" = {{ impl_name = "{}" }}
+            r#""{}" = {{ args = [{}], ret = "{}", impl_name = "{}" }}
 "#,
-            func.name, func.name
+            func.name,
+            args.iter().map(|a| format!("\"{}\"", a)).collect::<Vec<_>>().join(", "),
+            ret,
+            func.name
         ));
     }
     

@@ -77,3 +77,21 @@ pub fn rust_type_to_ts(ty: &str) -> String {
     
     "number".to_string()
 }
+
+pub fn rust_type_to_arg_type(ty: &str) -> String {
+    let ty = ty.trim();
+    
+    if ty == "void" || ty == "()" {
+        return "void".to_string();
+    }
+    
+    if ty.starts_with("*const c_char") || ty.starts_with("*mut c_char") {
+        return "string".to_string();
+    }
+    
+    "number".to_string()
+}
+
+pub fn rust_type_to_ret_type(ty: &str) -> String {
+    rust_type_to_arg_type(ty)
+}
