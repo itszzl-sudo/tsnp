@@ -34,47 +34,39 @@ cargo install --path .
 
 ## Commands
 
-### `cargo tsnp gen <crate-name>`
+### `tsnp gen <name>`
 
-Generate plugin configuration from a published crates.io crate.
-
-```bash
-cargo tsnp gen regex
-cargo tsnp gen serde_json
-```
-
-**Interactive source selection:**
-
-```
-Choose source for FFI function analysis:
-[1] Local source code (specify local path)
-[2] Download from GitHub (no token required, slower)
-[3] Download from GitHub with token (faster via Search API)
-```
-
-| Option | Description | Requirements |
-|--------|-------------|--------------|
-| `[1]` | Scan local directory | Path to crate source |
-| `[2]` | Download tarball | None (public repos) |
-| `[3]` | Search API | GitHub token |
-
-### `cargo tsnp new <plugin-name>`
-
-Create an empty plugin template for manual configuration.
+从 Rust crate 生成插件配置。
 
 ```bash
-cargo tsnp new my-plugin
+tsnp gen regex
+tsnp gen serde_json
 ```
 
-## Output Structure
+选择源码来源：
+```
+[1] Local source code      # 本地路径
+[2] GitHub tarball         # 无需 token
+[3] GitHub Search API      # 需要 token，更快
+```
 
-Both commands generate a `tsnp/<name>/` directory:
+生成 `tsnp/<name>/` 目录。
+
+### `tsnp new <name>`
+
+生成空模板，手动配置。
+
+```bash
+tsnp new my-plugin
+```
+
+## 输出
 
 ```
 tsnp/<name>/
-├── ts-native.toml    # Plugin configuration
-├── index.d.ts        # TypeScript type definitions
-└── README.md         # Usage documentation
+├── ts-native.toml    # 函数映射
+├── index.d.ts        # TypeScript 类型
+└── README.md         # 使用说明
 ```
 
 ### Generated Files
