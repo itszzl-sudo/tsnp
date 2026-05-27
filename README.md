@@ -195,22 +195,23 @@ tsnp 生成的配置会被 ts-native 自动识别和加载。
 
 ### 自动发现机制 (ts-native v0.1.8+)
 
-扫描当前目录下的 `tsnp/` 目录：
+**规则：** 在当前目录找 `tsnp/` 文件夹，加载里面的所有插件。
 
 ```
-project/
-├── tsnp/
-│   ├── plugin-a/
-│   │   └── ts-native.toml    ✅ 加载
-│   └── plugin-b/
-│       └── ts-native.toml    ✅ 加载
-└── main.ts
+你的项目/
+├── tsnp/                    ← 扫描这个目录
+│   ├── math/
+│   │   └── ts-native.toml   ← 加载
+│   └── dom/
+│       └── ts-native.toml   ← 加载
+├── main.ts
+└── a.exe
 ```
 
+**使用：**
 ```bash
-ts-native main.ts
-# 扫描 tsnp/ 目录...
-# 加载了 2 个扩展包
+cd 你的项目          # 进入项目目录
+ts-native main.ts   # 自动扫描 ./tsnp/
 ```
 
 ### 完整工作流
