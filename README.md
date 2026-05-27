@@ -1,8 +1,22 @@
 # tsnp (TypeScript Native Plugin Tool)
 
+[![Crates.io](https://img.shields.io/crates/v/tsnp.svg)](https://crates.io/crates/tsnp)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 **Auto-generate ts-native plugin configuration from Rust crates**
 
-`tsnp` is a command-line tool that analyzes Rust crates for FFI functions and generates TypeScript type definitions and configuration files for the ts-native runtime. This enables TypeScript code to call Rust functions directly without Node.js.
+`tsnp` 是 ts-native 编译器的配套工具，用于自动生成 TypeScript 类型定义和配置文件，使 TypeScript 代码能够直接调用 Rust FFI 函数，无需 Node.js 运行时。
+
+## 工具链概览
+
+```
+tsnp (配置生成)  →  ts-native (编译器)  →  原生可执行文件
+```
+
+| 工具 | 作用 | 版本 |
+|------|------|------|
+| **tsnp** | 生成插件配置和类型定义 | v0.1.0 |
+| **ts-native** | TypeScript → 原生编译器 | v0.1.8 |
 
 ## Installation
 
@@ -76,8 +90,8 @@ name = "tsnp-example"
 version = "0.1.0"
 
 [functions]
-"js_add" = { impl_name = "js_add" }
-"js_multiply" = { impl_name = "js_multiply" }
+"js_add" = { args = ["number", "number"], ret = "number", impl_name = "js_add" }
+"js_multiply" = { args = ["number", "number"], ret = "number", impl_name = "js_multiply" }
 
 [link]
 lib = "example"
@@ -177,7 +191,62 @@ Benefits:
 
 ## Integration with ts-native
 
-This tool generates configuration for the [ts-native](https://github.com/your-org/ts-native) runtime:
+tsnp 生成的配置会被 ts-native 自动识别和加载。
+
+### 自动发现机制 (ts-native v0.1.8+)
+
+ts-native 会自动扫描项目目录下的 `tsnp/` 目录：
+
+```
+project/
+├── tsnp/
+│   └── my-plugin/
+│       └── ts-native.toml    # 自动加载
+├── Cargo.toml
+└── src/
+    └── main.ts
+```
+
+### 完整工作流
+
+```bash
+# 步骤 1: 编写 Rust FFI 函数
+# src/lib.rs
+# #[no_mangle]
+# pub extern "C" fn add(a: i32, b: i32) -> i32 { a + b }
+
+# 步骤 2: 使用 tsnp 生成配置
+cargo tsnp gen my-plugin
+# 选择 [1] 本地源码
+
+# 步骤 3: 构建原生库
+cargo build --release
+# 生成 my_plugin.dll
+
+# 步骤 4: 编写 TypeScript
+# src/main.ts
+# import { add } from "tsnp-my-plugin";
+# print(add(1, 2));
+
+# 步骤 5: 使用 ts-native 编译
+ts-native src/main.ts
+# 输出：检测到 tsnp/ 目录，扫描插件配置...
+# 输出：加载插件: tsnp-my-plugin
+# 输出：✅ 输出: a.exe
+
+# 步骤 6: 运行
+./a.exe
+# 输出：3
+```
+
+### 扩展包加载顺序
+
+ts-native 按以下顺序扫描扩展：
+
+1. **tsnp/ 目录** (v0.1.8+) - 扫描 `tsnp/*/ts-native.toml`
+2. **Cargo.toml 依赖** (v0.1.2+) - 扫描 `[package.metadata.ts-native]`
+
+This tool generates configuration for the [ts-native](https://github.com/itszzl-sudo/ts-native) runtime:
 
 1. ts-native reads `ts-native.toml` to find function mappings
 2. Loads native library (`.dll` / `.so` / `.dylib`)
@@ -237,7 +306,11 @@ MIT OR Apache-2.0
 
 ## Links
 
-- [ts-native Runtime](https://github.com/itszzl-sudo/ts-native)
+- [ts-native Runtime](https://github.com/itszzl-sudo/ts-native) - TypeScript 原生编译器
 - [tsnp on GitHub](https://github.com/itszzl-sudo/tsnp)
 - [crates.io](https://crates.io/crates/tsnp)
 - [Documentation](https://docs.rs/tsnp)
+
+---
+
+最后更新: 2026-05-27 (v0.1.0)
