@@ -246,23 +246,11 @@ ts-native src/main.ts
 # 输出：3
 ```
 
-### 扩展包加载顺序
+### 完整工作流
 
-ts-native 按以下顺序扫描扩展：
-
-1. **tsnp/ 目录** (v0.1.8+) - 扫描 `tsnp/*/ts-native.toml`
-2. **Cargo.toml 依赖** (v0.1.2+) - 扫描 `[package.metadata.ts-native]`
-
-This tool generates configuration for the [ts-native](https://github.com/itszzl-sudo/ts-native) runtime:
-
-1. ts-native reads `ts-native.toml` to find function mappings
-2. Loads native library (`.dll` / `.so` / `.dylib`)
-3. TypeScript calls are translated to FFI calls
-4. Type conversions handled automatically
+（见上文示例）
 
 ## Troubleshooting
-
-### "Crate not found on crates.io"
 
 - Verify the crate name is correct
 - Check if crate is published: `https://crates.io/crates/<name>`
