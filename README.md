@@ -207,6 +207,52 @@ project/
     └── main.ts
 ```
 
+**扫描规则：**
+
+1. 遍历 `tsnp/` 目录下的所有子目录
+2. 查找每个子目录中的 `ts-native.toml` 文件
+3. 解析并注册找到的所有插件
+
+```
+tsnp/
+├── plugin-a/
+│   └── ts-native.toml    ✅ 加载
+├── plugin-b/
+│   └── ts-native.toml    ✅ 加载
+├── plugin-c/
+│   └── other.toml        ❌ 跳过（文件名不匹配）
+└── readme.md             ❌ 跳过（不是目录）
+```
+
+**扫描顺序（优先级从高到低）：**
+
+```
+1. <input_dir>/tsnp/              # TypeScript 文件所在目录
+2. <input_dir>/Cargo.toml         # TypeScript 文件所在目录（如果 1 未找到）
+3. ./tsnp/                         # 当前工作目录（如果 1-2 都未找到）
+4. ./Cargo.toml                    # 当前工作目录（如果 1-3 都未找到）
+```
+
+示例：
+```bash
+# 目录结构
+project/
+├── tsnp/
+│   └── my-plugin/ts-native.toml
+├── src/
+│   └── main.ts
+└── Cargo.toml
+
+# 运行命令
+cd project
+ts-native src/main.ts
+
+# 扫描顺序：
+# 1. src/tsnp/ → 不存在
+# 2. src/Cargo.toml → 不存在
+# 3. ./tsnp/ → 存在，加载 my-plugin ✅
+```
+
 ### 完整工作流
 
 ```bash
