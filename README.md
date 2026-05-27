@@ -1,68 +1,66 @@
 # tsnp
 
-## 是什么
+Plugin generator for the tsn toolchain.
 
-ts-native 插件开发工具。
+## What is it
 
-## 能做什么
+A tool that analyzes Rust crates and generates FFI plugin configurations for tsn (TypeScript native compiler).
 
-生成配置文件，告诉 ts-native 可以调用哪些 Rust FFI 函数。
+## What can it do
 
-## 怎么做
+Generate configuration files that tell tsn which Rust FFI functions can be called from TypeScript.
+
+## How to use
 
 ```bash
 tsnp gen <name>
 ```
 
-## 有什么缺陷
+## Limitations
 
-需要 Rust 源码才能分析 FFI 函数。
+Requires Rust source code to analyze FFI functions.
 
-## 怎么弥补
+## Solution
 
-提供三种源码来源：
-- [1] 本地路径 - 已有源码
-- [2] GitHub tarball - 自动下载
-- [3] Search API - 只下载 FFI 文件（需要 token）
+Provides three source options:
+- [1] Local path - existing source code
+- [2] GitHub tarball - automatic download
+- [3] Search API - download only FFI files (requires token)
 
-## 用什么工具
+## Commands
 
-tsnp 自己就是工具。
-
-## 这个工具怎么用
-
-### 自动生成
+### Automatic generation
 
 ```bash
 tsnp gen regex
 
-# 选择源码：
-# [1] 本地路径
+# Select source:
+# [1] Local path
 # [2] GitHub tarball
 # [3] Search API
 
-# 输出：tsnp/regex/
+# Output: tsnp/regex/
 ```
 
-### 手动创建
+### Manual creation
 
-不想分析源码？自己写配置：
+Don't want to analyze source code? Write configuration yourself:
 
 ```bash
 tsnp new my-plugin
-# 输出：tsnp/my-plugin/
+# Output: tsnp/my-plugin/
 ```
 
-### 输出什么
+### Output structure
 
 ```
 tsnp/<name>/
-├── ts-native.toml    # 函数映射配置
-├── index.d.ts        # TypeScript 类型定义
-└── README.md         # 使用说明
+├── ts-native.toml    # Function mapping configuration
+├── index.d.ts        # TypeScript type definitions
+└── README.md         # Usage documentation
 ```
 
-### ts-native.toml 内容
+### ts-native.toml format
 
 ```toml
 [package]
@@ -76,7 +74,7 @@ version = "0.1.0"
 lib = "math"
 ```
 
-## 类型映射
+## Type mapping
 
 | Rust | TypeScript |
 |------|------------|
@@ -84,24 +82,35 @@ lib = "math"
 | *const c_char | string |
 | () | void |
 
-## 完整流程
+## Complete workflow
 
 ```
-1. Rust 写 FFI 函数
+1. Write FFI function in Rust
    #[no_mangle]
    pub extern "C" fn add(a: i32, b: i32) -> i32 { a + b }
 
-2. tsnp 生成配置
+2. Generate configuration with tsnp
    tsnp gen my-plugin
 
-3. ts-native 编译
-   ts-native main.ts
-   （自动扫描 tsnp/ 目录）
+3. Compile with tsn
+   tsn main.ts
+   (automatically scans tsnp/ directory)
 
-4. 运行
+4. Run
    ./a.exe
 ```
 
-## 许可证
+## Installation
+
+```bash
+cargo install tsnp
+```
+
+## Related tools
+
+- **tsn** - TypeScript native compiler: `cargo install tsn`
+- **cargo-tsn** - Project manager: `cargo install cargo-tsn`
+
+## License
 
 MIT
