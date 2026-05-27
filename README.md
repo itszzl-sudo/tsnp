@@ -36,36 +36,47 @@ cargo install --path .
 
 ### `tsnp gen <name>`
 
-从 Rust crate 生成插件配置。
+分析 Rust crate 源码，提取 FFI 函数，生成配置。
+
+需要先获取源码（三选一）：
+```
+[1] Local path     # 已有源码，输入路径
+[2] GitHub tarball # 下载整个仓库
+[3] Search API     # 只下载 FFI 文件（需要 token）
+```
 
 ```bash
 tsnp gen regex
-tsnp gen serde_json
-```
 
-选择源码来源：
+# 输出：
+# Fetching crate 'regex' from crates.io...
+# Choose source:
+# [1] Local path
+# [2] GitHub tarball
+# [3] Search API
+# Choice: 2
+# Downloading from GitHub...
+# Found 5 FFI functions
+# Generated: tsnp/regex/
 ```
-[1] Local source code      # 本地路径
-[2] GitHub tarball         # 无需 token
-[3] GitHub Search API      # 需要 token，更快
-```
-
-生成 `tsnp/<name>/` 目录。
 
 ### `tsnp new <name>`
 
-生成空模板，手动配置。
+生成空模板，不分析源码，用户手动填写。
 
 ```bash
 tsnp new my-plugin
+# Generated: tsnp/my-plugin/
 ```
 
 ## 输出
 
+两个命令都生成：
+
 ```
 tsnp/<name>/
-├── ts-native.toml    # 函数映射
-├── index.d.ts        # TypeScript 类型
+├── ts-native.toml    # 函数映射配置
+├── index.d.ts        # TypeScript 类型定义
 └── README.md         # 使用说明
 ```
 
