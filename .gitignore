@@ -1,0 +1,21 @@
+/target
+/Cargo.lock
+*.pdb
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Generated test output
+/tsnp/
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
