@@ -4,13 +4,14 @@ version = "0.1.1"
 edition = "2021"
 authors = ["michael"]
 license = "MIT OR Apache-2.0"
-description = "Auto-generate ts-native plugin configuration from Rust crates"
+description = "DEPRECATED: Use cargo-tsn instead. Auto-generate ts-native plugin configuration from Rust crates"
 repository = "https://github.com/itszzl-sudo/tsnp"
 homepage = "https://github.com/itszzl-sudo/tsnp"
 documentation = "https://docs.rs/tsnp"
-readme = "README.md"
-keywords = ["typescript", "ffi", "native", "plugin", "code-generation"]
+readme = "DEPRECATED.md"
+keywords = ["deprecated", "typescript", "ffi", "native", "plugin"]
 categories = ["command-line-utilities", "development-tools::ffi"]
+deprecated = true
 
 [lib]
 name = "tsnp"
