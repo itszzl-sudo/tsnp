@@ -8,7 +8,7 @@ mod parser;
 mod generator;
 
 #[derive(Parser)]
-#[command(name = "cargo-tsnp")]
+#[command(name = "tsnp")]
 #[command(about = "Generate ts-native plugin configuration")]
 struct Cli {
     #[command(subcommand)]
